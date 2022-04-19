@@ -55,8 +55,12 @@ models:
       - github.com/99designs/gqlgen/graphql.Int64
       - github.com/99designs/gqlgen/graphql.Int32
   Todo:
-    model:
-      - todo/prisma.TodoModel
+    model: todo/prisma.TodoModel
+    fields:
+      user:
+        resolver: true
   User:
-    model:
-      - todo/prisma.UserModel
+    model:  todo/prisma.UserModel
+    fields:
+      todos:
+        resolver: true

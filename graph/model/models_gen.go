@@ -2,6 +2,20 @@
 
 package model
 
+import (
+	"todo/prisma"
+)
+
+type AuthResponse struct {
+	User  *prisma.UserModel `json:"user"`
+	Token string            `json:"token"`
+}
+
+type LoginInput struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 type NewTodo struct {
 	Text   string `json:"text"`
 	UserID string `json:"userId"`

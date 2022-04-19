@@ -1,0 +1,10 @@
+// todo
+create todo
+create user
+get todos
+mark todo as complete
+mark todo as incomplete
+fetch todos by user
+
+user resolver on todo
+todos resolver on users

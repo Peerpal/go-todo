@@ -45,16 +45,41 @@ func (repo *UserRepository) Create(input model.NewUser) (*prisma.UserModel, erro
 }
 
 func (repo *UserRepository) FindOne(id string) (*prisma.UserModel, error) {
+	if id == "" {
+		panic("id cannot be empty")
+	}
 	user, err := repo.client.User.FindFirst(
-		prisma.User.ID.Equals(id),
+		prisma.User.Or(
+			prisma.User.ID.Equals(id),
+			prisma.User.Email.Equals(id),
+		),
 	).Exec(repo.ctx)
 
 	if err != nil {
-		log.Fatalf("Error occurred while creating user, %V", err)
+		log.Panicf("Error occurred while Fetching user, %V", err)
 		return nil, err
 	}
 
 	return user, nil
+}
+
+func (repo *UserRepository) FindMany() ([]*prisma.UserModel, error) {
+	users, err := repo.client.User.FindMany().Exec(repo.ctx)
+
+	if err != nil {
+		log.Fatalf("Error retrieving users %V", err)
+		return nil, err
+	}
+
+	// convert to a slice of pointers
+	usersPointer := make([]*prisma.UserModel, len(users))
+
+	for index := range users {
+		usersPointer[index] = &users[index]
+
+	}
+
+	return usersPointer, nil
 }
 
 func (repo *UserRepository) userExists(email string) (bool, error) {

@@ -25,9 +25,10 @@ type User {
 
 type Query {
   todos: [Todo!]!
-  todo: Todo
+  todo(id: String!): Todo
   users: [User!]!
-  user(id: String!): User
+  getUser(id: String!): User
+  userTodos(id: String!): [Todo!]!
 }
 
 input NewTodo {
@@ -42,7 +43,23 @@ email: String!
 password: String!
 }
 
-type Mutation {
-  createTodo(input: NewTodo!): Todo!
-  createUser(input: NewUser!): User!
+input LoginInput {
+  email: String!
+  password: String!
 }
+
+type AuthResponse {
+  user: User!
+  token: String!
+}
+
+
+type Mutation {
+  createTodo(input: NewTodo!): Todo! @auth
+  createUser(input: NewUser!): User!
+  markTodoAsDone(id: String!): Boolean! @auth
+  markTodoAsUndone(id: String!): Boolean! @auth
+  login(input: LoginInput!): AuthResponse!
+}
+
+directive @auth on FIELD_DEFINITION
